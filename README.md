@@ -40,5 +40,5 @@
 ### 参考
 1.[教学链接](https://www.bilibili.com/video/BV13t411T72J?p=1)
 
-2.[学生作品(Github)](https://github.com/blankjee/light-blog)
+2.[作品参考(Github)](https://github.com/blankjee/light-blog)
 
