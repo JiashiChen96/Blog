@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="en">
-<head>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="_fragments :: head(~{::title})">
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -12,7 +12,7 @@
 <body>
 
     <!--导航-->
-    <nav class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+    <nav th:replace="_fragments :: menu(5)" class="ui inverted attached segment m-padded-tb-mini m-shadow-small" >
         <div class="ui container">
             <div class="ui inverted secondary stackable menu">
                 <h2 class="ui teal header item">Blog</h2>
@@ -40,7 +40,7 @@
             <div class="ui stackable grid">
                 <div class="eleven wide column">
                     <div class="ui segment">
-                        <img src="../static/images/Avatar.JPG" alt="" class="ui fluid rounded image">
+                        <img src="../static/images/Avatar.JPG" th:src="@{/images/Avatar.JPG}" alt="" class="ui fluid rounded image">
                     </div>
                 </div>
                 <div class="five wide column">
@@ -50,10 +50,16 @@
                             <p class="m-text">不一样的烟火</p>
                         </div>
                         <div class="ui attached segment">
-                            <div class="ui orange basic left pointing label">Label1</div>
+                            <div class="ui orange basic left pointing label">唱</div>
+                            <div class="ui orange basic left pointing label">跳</div>
+                            <div class="ui orange basic left pointing label">Rap</div>
+                            <div class="ui orange basic left pointing label">篮球</div>
                         </div>
                         <div class="ui attached segment">
-                            <div class="ui teal basic left pointing label m-margin-tb-tiny">Label1</div>
+                            <div class="ui teal basic left pointing label m-margin-tb-tiny">相声</div>
+                            <div class="ui teal basic left pointing label m-margin-tb-tiny">小品</div>
+                            <div class="ui teal basic left pointing label m-margin-tb-tiny">魔术</div>
+                            <div class="ui teal basic left pointing label m-margin-tb-tiny">杂技</div>
                         </div>
                         <div class="ui bottom attached segment">
                             <a href="#" class="ui circular icon button"><i class="github icon"></i></a>
@@ -72,7 +78,7 @@
     </div>
 
     <!--Footer-->
-    <footer class="ui inverted vertical segment">
+    <footer th:replace="_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
         <div class="ui center aligned container m-padded-tb-massive ">
             <div class="ui inverted divided stackable grid">
                 <div class="three wide column">
@@ -107,11 +113,10 @@
     </footer>
 
 
-<script
-        src="https://code.jquery.com/jquery-3.2.0.js"
-        integrity="sha256-wPFJNIFlVY49B+CuAIrDr932XSb6Jk3J1M22M3E2ylQ="
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+<!--/*/<th:block th:replace="_fragments :: script">/*/-->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<!--/*/</th:block>/*/-->
 <script>
     $('.menu.toggle').click(function(){
         $('.m-item').toggleClass('m-mobile-hide');

@@ -40,8 +40,8 @@
     <div class="ui attached pointing menu">
         <div class="ui container">
             <div class="right menu">
-                <a href="#" class="item">发布</a>
-                <a href="#" class="active item">列表</a>
+                <a href="#" th:href="@{/admin/blogs/input}" class="item">发布</a>
+                <a href="#" th:href="@{/admin/blogs}" class="teal active item">列表</a>
             </div>
         </div>
     </div>
@@ -49,22 +49,24 @@
     <!--中间内容-->
     <div class="m-container-small m-padded-tb-big">
         <div class="ui container">
-            <form action="#" method="post" class="ui segment form">
+            <div class="ui secondary segment form">
+                <imput type="hidden" name="page"></imput>
                 <div class="inline fields">
                     <div class="field">
                         <input type="text" name="title" placeholder="标题">
                     </div>
                     <div class="field">
-                        <div class="ui selection dropdown">
-                            <input type="hidden" name="type">
-                            <i class="dropdown icon"></i>
-                            <div class="default text">分类</div>
-                            <div class="menu">
-                                <div class="item" data-value = "1">错误日志</div>
-                                <div class="item" data-value = "2">错误日志</div>
-                                <div class="item" data-value = "3">错误日志</div>
+                        <div class="ui labeled action input">
+                            <div class="ui type selection dropdown">
+                                <input type="hidden" name="typeId">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">分类</div>
+                                <div class="menu">
+                                    <div th:each="type : ${types}" class="item" data-value = "1" th:data-value="${type.id}" th:text="${type.name}">错误日志</div>
+                                </div>
                             </div>
                         </div>
+                        <button id="clear-btn" class="ui compact button">clear</button>
                     </div>
                     <div class="field">
                         <div class="ui checkbox">
@@ -73,46 +75,50 @@
                         </div>
                     </div>
                     <div class="field">
-                        <buttion class="ui mini teal basic button"><i class="search icon"></i>搜索</buttion>
+                        <buttion type="button" id="search-btn" class="ui mini teal basic button"><i class="search icon"></i>搜索</buttion>
                     </div>
                 </div>
-            </form>
-            <table class="ui table">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>标题</th>
-                    <th>类型</th>
-                    <th>推荐</th>
-                    <th>更新时间</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody>
+            </div>
+            <div id="table-container">
+                <table th:fragment="blogList" class="ui compact teal table">
+                    <thead>
                     <tr>
-                        <td>1</td>
-                        <td>加快立法圣诞节卷风</td>
-                        <td>加快立法圣诞龙卷</td>
-                        <td>是</td>
-                        <td>2020-6-1</td>
+                        <th></th>
+                        <th>标题</th>
+                        <th>类型</th>
+                        <th>推荐</th>
+                        <th>状态</th>
+                        <th>更新时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="blog,iterStat : ${page.content}">
+                        <td th:text="${iterStat.count}">1</td>
+                        <td th:text="${blog.title}">加快立法圣诞节卷风</td>
+                        <td th:text="${blog.type.name}">加快立法圣诞龙卷</td>
+                        <td th:text="${blog.recommend} ? '是':'否'">是</td>
+                        <td th:text="${blog.published} ? '发布':'草稿'">草稿</td>
+                        <td th:text="${blog.updateTime}">2020-6-1</td>
                         <td>
-                            <a href="#" class="ui mini teal basic button">编辑</a>
-                            <a href="#" class="ui mini red basic button">删除</a>
+                            <a href="#" th:href="@{/admin/blogs/{id}/input(id=${blog.id})}" class="ui mini teal basic button">编辑</a>
+                            <a href="#" th:href="@{/admin/blogs/{id}/delete(id=${blog.id})}" class="ui mini red basic button">删除</a>
                         </td>
                     </tr>
-                </tbody>
-                <tfoot>
-                <tr>
-                    <th colspan="6">
-                        <div class="ui mini pagination menu">
-                            <a class="item">上一页</a>
-                            <a class="item">下一页</a>
-                        </div>
-                        <a href="#" class="ui mini right floated teal basic button">新增</a>
-                    </th>
-                </tr>
-                </tfoot>
-            </table>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="7">
+                            <div class="ui mini pagination menu">
+                                <a onclick="page(this)" th:attr="data-page={page.number}-1" class="item" th:unless="${page.first}">上一页</a>
+                                <a onclick="page(this)" th:attr="data-page={page.number}+1" class="item" th:unless="${page.last}">下一页</a>
+                            </div>
+                            <a href="#" th:href="@{/admin/blogs/input}" class="ui mini right floated teal basic button">新增</a>
+                        </th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -152,7 +158,7 @@
     </footer>
 
 
-<!--/*/<th:block th:replace="_fragments :: script">/*/-->
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <!--/*/</th:block>/*/-->
@@ -162,6 +168,39 @@
     });
     $('.ui.dropdown').dropdown();
 
+    //消息提示关闭初始化
+    $('.message .close')
+        .on('click', function () {
+            $(this)
+                .closest('.message')
+                .transition('fade');
+        });
+
+    $('#clear-btn')
+        .on('click', function() {
+            $('.ui.type.dropdown')
+                .dropdown('clear')
+            ;
+        });
+
+    function page(obj) {
+        $("[name='page']").val($(obj).data("page"));
+        loaddata();
+    }
+
+    $("#search-btn").click(function () {
+        $("[name='page']").val(0);
+        loaddata();
+    });
+
+    function loaddata() {
+        $("#table-container").load(/*[[@{/admin/blogs/search}]]*/"/admin/blogs/search",{
+            title : $("[name='title']").val(),
+            typeId : $("[name='typeId']").val(),
+            recommend : $("[name='recommend']").prop('checked'),
+            page : $("[name='page']").val()
+        });
+    }
 </script>
 </body>
 </html>

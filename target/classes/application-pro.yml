@@ -1,12 +1,12 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/blog?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
-    username: root
-    password: admin123
+    url: jdbc:mysql://us-cdbr-east-02.cleardb.com/heroku_5f9db8904cf9616?reconnect=true
+    username: b7058579bffd68
+    password: a6d08053
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
 
 logging:
